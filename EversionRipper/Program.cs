@@ -15,6 +15,8 @@ namespace EversionRipper
             return EmbeddedAssembly.Get(args.Name);
         }
 
+        static string QuitResult = "This program is dedicated to Su Tolias.";
+
         static void Main(string[] args)
         {
             string GZipResource = "EversionRipper.ICSharpCode.SharpZipLib.dll";
@@ -23,18 +25,18 @@ namespace EversionRipper
             EmbeddedAssembly.Load(DrawingResource, "System.Drawing.Common.dll");
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 
-            Console.WriteLine(
-                //"NOTE: THIS PROGRAM IS STILL A WORK IN PROGRESS.\n" +
-                "Eversion Ripper v1.0 by [hy]\n" +
-                "with research provided by shrubbyfrog\n\n" +
-                "FILES SUPPORTED ARE:\n" +
+            Console.Write(
+                "Eversion Ripper v1.0.1 by ");
+                DrawWithColor("[hy]\n", ConsoleColor.Magenta);
+                Console.Write("with research provided by ");
+                DrawWithColor("shrubbyfrog\n\n", ConsoleColor.Green);
+                Console.WriteLine("FILES SUPPORTED ARE:\n" +
                 "-.cha\n" +
                 "-.zrs\n\n" +
                 "GAMES SUPPORTED:\n" +
                 "-Eversion\n" +
                 "-Eversion HD\n" +
                 "-Eversion HD (Steam)\n\n" +
-                //"*indicates partial support\n" +
                 "====\n"
                 );
             if (args.Length < 1)
@@ -44,19 +46,27 @@ namespace EversionRipper
             }
             if (args.Length < 2 || string.IsNullOrEmpty(args[1]))
             {
+                ConsoleKeyInfo keyInfo;
                 Console.WriteLine("Do you want to convert all transparent pixels? y/n");
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.Y)
+                do
                 {
-                    Func(args[0], true);
-                }
-                if (keyInfo.Key == ConsoleKey.N)
-                {
-                    Func(args[0], false);
-                }
+                    while (!Console.KeyAvailable) Thread.Sleep(10);
+                    keyInfo = Console.ReadKey(true);
+                    if (keyInfo.Key == ConsoleKey.Y)
+                    {
+                        Func(args[0], true);
+                    }
+                    if (keyInfo.Key == ConsoleKey.N)
+                    {
+                        Func(args[0], false);
+                    }
+                    if (keyInfo.Key == ConsoleKey.Escape || keyInfo.Key == ConsoleKey.X)
+                    {
+                        QuitResult = "Cancelling application...";
+                        DoQuit(QuitResult, 1200, 0);
+                    }
+                } while (keyInfo.Key != ConsoleKey.Y || keyInfo.Key != ConsoleKey.N || keyInfo.Key != ConsoleKey.Escape || keyInfo.Key != ConsoleKey.X);
             }
-            Console.WriteLine("\nOK!");
-            Thread.Sleep(1000);
         }
 
         static void Func(string path, bool convertTransparent)
@@ -179,16 +189,69 @@ namespace EversionRipper
                     OutImage.SetPixel(x, y, WriteThis);
                 }
 
+                uncompressedStream.Close();
                 var graphic = Graphics.FromImage(OutImage);
 
                 //A few tidbits to drop the files in a folder next to where they came from.
                 var filename = Path.GetFileNameWithoutExtension(path);
                 var file = Path.GetFileName(path);
                 var directory = path.Replace(file, "");
-                Directory.CreateDirectory(directory + filename);
-                OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i}.png", System.Drawing.Imaging.ImageFormat.Png);
+                if (File.Exists(directory + filename) || Directory.Exists(directory+filename))
+                {
+                    DrawWithColor("ERROR: Could not create the directory or file as it already exists.\nPlease remove the file and try again.\n", ConsoleColor.Red);
+                    Console.WriteLine("Press any key to quit the application.");
+                    Console.ReadKey(true);
+                    DoQuit(QuitResult, 100, 80);
+                }
+                else
+                {
+                    Directory.CreateDirectory(directory + filename);
+                    OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i}.png", System.Drawing.Imaging.ImageFormat.Png);
+                    QuitResult = "OK!";
+                    DoQuit(QuitResult, 1200);
+                }
             }
-            uncompressedStream.Close();
+
+        }
+
+        static string DrawWithColor(string text, ConsoleColor textColour)
+        {
+            Console.ForegroundColor = textColour;
+            Console.Write(text);
+            Console.ResetColor();
+            return null;
+        }
+        static string DrawWithColor(string text, ConsoleColor textColour, ConsoleColor backgroundColour)
+        {
+            Console.ForegroundColor = textColour;
+            Console.BackgroundColor = backgroundColour;
+            Console.Write(text);
+            Console.ResetColor();
+            return null;
+        }
+
+        static void DoQuit()
+        {
+            Thread.Sleep(1200);
+            Environment.Exit(0);
+        }
+        static void DoQuit(string result)
+        {
+            Console.WriteLine(result);
+            Thread.Sleep(1200);
+            Environment.Exit(0);
+        }
+        static void DoQuit(string result, int timeout)
+        {
+            Console.WriteLine(result);
+            Thread.Sleep(timeout);
+            Environment.Exit(0);
+        }
+        static void DoQuit(string result, int timeout, int exitCode)
+        {
+            Console.WriteLine(result);
+            Thread.Sleep(timeout);
+            Environment.Exit(exitCode);
         }
     }
 
