@@ -207,9 +207,9 @@ namespace EversionRipper
                 {
                     Directory.CreateDirectory(directory + filename);
                     OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i}.png", System.Drawing.Imaging.ImageFormat.Png);
-                    QuitResult = "OK!";
-                    DoQuit(QuitResult, 1200);
                 }
+                QuitResult = "OK!";
+                DoQuit(QuitResult, 1200);
             }
 
         }
