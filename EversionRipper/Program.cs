@@ -196,7 +196,7 @@ namespace EversionRipper
                 var filename = Path.GetFileNameWithoutExtension(path);
                 var file = Path.GetFileName(path);
                 var directory = path.Replace(file, "");
-                if (File.Exists(directory + filename) || Directory.Exists(directory+filename))
+                if (i == 0 && (File.Exists(directory + filename) || Directory.Exists(directory+filename)))
                 {
                     DrawWithColor("ERROR: Could not create the directory or file as it already exists.\nPlease remove the file and try again.\n", ConsoleColor.Red);
                     Console.WriteLine("Press any key to quit the application.");
@@ -208,9 +208,9 @@ namespace EversionRipper
                     Directory.CreateDirectory(directory + filename);
                     OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i}.png", System.Drawing.Imaging.ImageFormat.Png);
                 }
-                QuitResult = "OK!";
-                DoQuit(QuitResult, 1200);
             }
+            QuitResult = "OK!";
+            DoQuit(QuitResult, 1200);
 
         }
 
