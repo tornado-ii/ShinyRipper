@@ -15,10 +15,10 @@ This program was created with the assistance of shrubbyfrog and is dedicated to 
    2. Open *EversionRipper.exe* and drag the archive (`.cha` or `.zrs`) to the console window when asking for a path
    3. Open *EversionRipper.exe* and manually type in the path to the archive (`.cha` or `.zrs`)
    - **Press enter/return to submit the path to the program.**
-5. The program will now ask if you would like to "convert transparent pixels". *Eversion* sprites use a default colour (either specified in the header of the extracted archive or found in `Eversion/scripts/main.rb`) to represent transparency. Selecting 'yes' will make these transparent instead of the solid colour. Selecting 'no' will output the sprite with this background colour. The program will only accept four inputs at this point:
+4. The program will now ask if you would like to "convert transparent pixels". *Eversion* sprites use a default colour (either specified in the header of the extracted archive or found in `Eversion/scripts/main.rb`) to represent transparency. Selecting 'yes' will make these transparent instead of the solid colour. Selecting 'no' will output the sprite with this background colour. The program will only accept four inputs at this point:
    1. Y (yes, convert background colour to transparent pixels)
    2. N (no, don't convert background colour to transparent pixels)
    3. X or Escape (quit application)
-6. The program will go through the extracted archive and render all the sprites to `.png` format in a folder in the same directory as the original archive. *(e.g. `Eversion/chrs/player/`)*.
-   - If a folder or file without extension with the same name already exists, the application will refuse to render the sprites due to naming conflicts (I don't want to overwrite your files). You will need the remove the conflicting file or folder and try again.
-7. The program will exit automatically with the message `OK!` indicating it has gone through the entirety of the ripping function. Your sprites should now be located in a folder in the same directory as the archive was in. The sprites will be named after the archive with an appended digit indicating its index in the archive.
+5. The program will go through the extracted archive and render all the sprites to `.png` format in a folder in the same directory as the original archive. *(e.g. `Eversion/chrs/player/`)*.
+   - If a folder or file without extension with the same name already exists, the application will refuse to render the sprites due to naming conflicts (I don't want to overwrite your files). You will need to remove the conflicting file or folder and try again.
+6. The program will exit automatically with the message `OK!` indicating it has gone through the entirety of the ripping function. Your sprites should now be located in a folder in the same directory as the archive was in. The sprites will be named after the archive with an appended digit indicating its index in the archive.
