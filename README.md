@@ -14,7 +14,7 @@ This program was created with the assistance of shrubbyfrog and is dedicated to 
    1. Drag the archive (`.cha` or `.zrs`) to *EversionRipper.exe*
    2. Open *EversionRipper.exe* and drag the archive (`.cha` or `.zrs`) to the console window when asking for a path
    3. Open *EversionRipper.exe* and manually type in the path to the archive (`.cha` or `.zrs`)
-4. Press enter/return to submit the path to the program.
+   - Press enter/return to submit the path to the program.
 5. The program will now ask if you would like to "convert transparent pixels". *Eversion* sprites use a default colour (either specified in the header of the extracted archive or found in `Eversion/scripts/main.rb`) to represent transparency. Selecting 'yes' will make these transparent instead of the solid colour. Selecting 'no' will output the sprite with this background colour. The program will only accept four inputs at this point:
    1. Y (yes, convert background colour to transparent pixels)
    2. N (no, don't convert background colour to transparent pixels)
