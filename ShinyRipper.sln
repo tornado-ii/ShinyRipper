@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShinyRipper", "EversionRipper\ShinyRipper.csproj", "{C9F7238E-01EB-4A27-833F-FC3780E03C45}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03521CBA-8356-464E-A823-6C4A59E5799A}"
 	ProjectSection(SolutionItems) = preProject
 		EversionRipper\bin\Debug\ICSharpCode.SharpZipLib.dll = EversionRipper\bin\Debug\ICSharpCode.SharpZipLib.dll
 		EversionRipper\bin\Debug\System.Drawing.Common.dll = EversionRipper\bin\Debug\System.Drawing.Common.dll
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShinyRipper", "ShinyRipper\ShinyRipper.csproj", "{C9F7238E-01EB-4A27-833F-FC3780E03C45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +24,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C9F7238E-01EB-4A27-833F-FC3780E03C45} = {03521CBA-8356-464E-A823-6C4A59E5799A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D160148E-79EC-47AB-85D0-4EF1D64A9475}

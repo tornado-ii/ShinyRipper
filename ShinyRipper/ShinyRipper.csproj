@@ -91,8 +91,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ShinyRipper.ico" />
-    <Content Include="ShinyRipper64x.ico" />
+    <Content Include="eversionripper.ico" />
+    <Content Include="EversionRipper64x.ico" />
     <EmbeddedResource Include="ICSharpCode.SharpZipLib.dll" />
     <EmbeddedResource Include="System.Drawing.Common.dll" />
     <None Include="bin\Debug\System.Drawing.Common.dll" />
