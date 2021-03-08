@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C9F7238E-01EB-4A27-833F-FC3780E03C45}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>EversionRipper</RootNamespace>
-    <AssemblyName>EversionRipper</AssemblyName>
+    <RootNamespace>ShinyRipper</RootNamespace>
+    <AssemblyName>ShinyRipper</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -91,8 +91,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="eversionripper.ico" />
-    <Content Include="EversionRipper64x.ico" />
+    <Content Include="ShinyRipper.ico" />
+    <Content Include="ShinyRipper64x.ico" />
     <EmbeddedResource Include="ICSharpCode.SharpZipLib.dll" />
     <EmbeddedResource Include="System.Drawing.Common.dll" />
     <None Include="bin\Debug\System.Drawing.Common.dll" />

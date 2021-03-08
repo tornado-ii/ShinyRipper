@@ -22,8 +22,8 @@ namespace ShinyRipper
 
         static void Main(string[] args)
         {
-            string GZipResource = "EversionRipper.ICSharpCode.SharpZipLib.dll";
-            string DrawingResource = "EversionRipper.System.Drawing.Common.dll";
+            string GZipResource = "ShinyRipper.ICSharpCode.SharpZipLib.dll";
+            string DrawingResource = "ShinyRipper.System.Drawing.Common.dll";
             EmbeddedAssembly.Load(GZipResource, "ICSharpCode.SharpZipLib.dll");
             EmbeddedAssembly.Load(DrawingResource, "System.Drawing.Common.dll");
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);

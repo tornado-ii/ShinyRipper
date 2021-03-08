@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EversionRipper")]
-[assembly: AssemblyDescription("Rips graphic files from Eversion and Eversion HD")]
+[assembly: AssemblyTitle("ShinyRipper")]
+[assembly: AssemblyDescription("Rips graphics from Shiny graphics archives.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("hy")]
-[assembly: AssemblyProduct("EversionRipper")]
+[assembly: AssemblyProduct("ShinyRipper")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
