@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 
-namespace EversionRipper
+namespace ShinyRipper
 {
     // by adriancs
     // https://www.codeproject.com/articles/528178/load-dll-from-embedded-resource

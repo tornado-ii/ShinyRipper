@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EversionRipper.Properties {
+namespace ShinyRipper.Properties {
     using System;
     
     

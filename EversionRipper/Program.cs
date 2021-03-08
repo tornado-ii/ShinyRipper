@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Reflection;
 using ICSharpCode.SharpZipLib.GZip;
+using ShinyTools;
 
-namespace EversionRipper
+namespace ShinyRipper
 {
     class Program
     {
@@ -15,6 +16,8 @@ namespace EversionRipper
             return EmbeddedAssembly.Get(args.Name);
         }
 
+        static byte[] outStreamArray;
+        static string extension = ".cha";
         static string QuitResult = "This program is dedicated to Su Tolias.";
 
         static void Main(string[] args)
@@ -25,23 +28,33 @@ namespace EversionRipper
             EmbeddedAssembly.Load(DrawingResource, "System.Drawing.Common.dll");
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 
-            Console.Write(
-                "Eversion Ripper v1.0.1 by ");
-                DrawWithColor("[hy]\n", ConsoleColor.Magenta);
+            ShinyTools.Helpers.Console.WriteColor("S", ConsoleColor.Red, false);
+            ShinyTools.Helpers.Console.WriteColor("H", ConsoleColor.Yellow, false);
+            ShinyTools.Helpers.Console.WriteColor("I", ConsoleColor.Green, false);
+            ShinyTools.Helpers.Console.WriteColor("N", ConsoleColor.Cyan, false);
+            ShinyTools.Helpers.Console.WriteColor("Y", ConsoleColor.Blue, false);
+                Console.Write(" Ripper v1.2.0 by ");
+                ShinyTools.Helpers.Console.WriteColor("[hy]\n", ConsoleColor.Magenta);
                 Console.Write("with research provided by ");
-                DrawWithColor("shrubbyfrog\n\n", ConsoleColor.Green);
+                ShinyTools.Helpers.Console.WriteColor("shrubbyfrog\n\n", ConsoleColor.Green);
                 Console.WriteLine("FILES SUPPORTED ARE:\n" +
-                "-.cha\n" +
-                "-.zrs\n\n" +
-                "GAMES SUPPORTED:\n" +
-                "-Eversion\n" +
-                "-Eversion HD\n" +
-                "-Eversion HD (Steam)\n\n" +
+                "\x10 .cha (compressed)\n" +
+                "\x10 .cha (uncompressed)\n" +
+                "\x10 .zrs (compressed)\n\n" +
+                "GAMES FULLY SUPPORTED:\n" +
+                "\x10 Eversion\n" +
+                "\x10 Eversion HD\n" +
+                "\x10 Eversion HD (Steam)\n\n" +
+                "GAMES PARTIALLY SUPPORTED\n" +
+                "\x10 4Four\n" +
+                "\x10 Pac-Shark\n" +
+                "\x10 Castle Awesome\n" +
+                "\x10 Zeta's World\n" +
                 "====\n"
                 );
             if (args.Length < 1)
             {
-                Console.WriteLine("Enter the path to the Eversion graphic file.");
+                Console.WriteLine("Enter the path to the Shiny graphic archive.");
                 args = new string[1] { Console.ReadLine() };
             }
             if (args.Length < 2 || string.IsNullOrEmpty(args[1]))
@@ -63,7 +76,7 @@ namespace EversionRipper
                     if (keyInfo.Key == ConsoleKey.Escape || keyInfo.Key == ConsoleKey.X)
                     {
                         QuitResult = "Cancelling application...";
-                        DoQuit(QuitResult, 1200, 0);
+                        ShinyTools.Helpers.Application.Quit(QuitResult, 1200, 0);
                     }
                 } while (keyInfo.Key != ConsoleKey.Y || keyInfo.Key != ConsoleKey.N || keyInfo.Key != ConsoleKey.Escape || keyInfo.Key != ConsoleKey.X);
             }
@@ -76,20 +89,33 @@ namespace EversionRipper
             {
                 path = path.Replace(invalid.ToString(), "");
             }
-            //Unpack the GZip file
-            MemoryStream compressedStream = new MemoryStream(File.ReadAllBytes(path));
-            var extention = Path.GetExtension(path);
-            MemoryStream uncompressedStream = new MemoryStream();
-            ICSharpCode.SharpZipLib.GZip.GZipInputStream GZipOut = new ICSharpCode.SharpZipLib.GZip.GZipInputStream(compressedStream);
-            GZipOut.CopyTo(uncompressedStream);
-            compressedStream.Close();
-            GZipOut.Close();
 
-            //This is the extracted file from the GZip buffer.
-            //Otherwise known as the Eversion character file.
-            var outStreamArray = uncompressedStream.ToArray();
+            //This block is to give a little extra compatibility
+            //for older Shiny games and extracted .cha files
+            try
+			{
+                //Unpack the GZip file
+                MemoryStream compressedStream = new MemoryStream(File.ReadAllBytes(path));
+                MemoryStream uncompressedStream = new MemoryStream();
+                ICSharpCode.SharpZipLib.GZip.GZipInputStream GZipOut = new ICSharpCode.SharpZipLib.GZip.GZipInputStream(compressedStream);
+                GZipOut.CopyTo(uncompressedStream);
+                compressedStream.Close();
+                GZipOut.Close();
+
+                //This is the extracted file from the GZip buffer.
+                //Otherwise known as the Eversion character file.
+                outStreamArray = uncompressedStream.ToArray();
+
+                //Clear the streams and dispose of them.
+                uncompressedStream.Close();
+                compressedStream.Close();
+            }
+			catch
+			{
+                outStreamArray = File.ReadAllBytes(path);
+			}
             
-            //This is the header of the Eversion character file.
+            //This is the header of the Shiny character archive.
             byte[] header = new byte[0x40];
             Array.Copy(outStreamArray, header, 0x40);
 
@@ -98,27 +124,27 @@ namespace EversionRipper
             byte[] SpriteHeightBytes = new byte[2];
             Array.Copy(header, 0x4, SpriteWidthBytes, 0, 2);
 
-            //This is the rest of the Eversion character file, minus the header.
+            //This is the rest of the Shiny character archive, minus the header.
             byte[] SpriteBuffer = new byte[outStreamArray.Length - header.Length];
             Array.Copy(outStreamArray, header.Length, SpriteBuffer, 0, outStreamArray.Length - header.Length);
 
-            //This is the length of data found between sprites.
-            //At the time of writing, we don't know what this
-            //data actually represents.
-            int SpriteSeparatorLength = 0;
+            //This is the visual XY and collision XY offset for the sprite.
+            //It's not used here, since we only care about the sprite data.
+            //So instead we only care about its length.
+            int SpriteDataHeaderLength = 0;
 
             //The transparency colour of sprites are 
             //defined in character sprites but not background sprites
             byte[] SpriteTransparentColour = new byte[3];
 
-            if (extention == ".cha")
+            if (extension == ".cha")
             {
-                SpriteSeparatorLength = 0x10;
+                SpriteDataHeaderLength = 0x10;
                 Array.Copy(header, 0x24, SpriteTransparentColour, 0, 3);
                 Array.Copy(header, 0x6, SpriteHeightBytes, 0, 2);
             }
 
-            if (extention == ".zrs")
+            if (extension == ".zrs")
             {
                 SpriteTransparentColour = new byte[3] { 0x40, 0, 0x40 };
                 Array.Copy(header, 0x8, SpriteHeightBytes, 0, 2);
@@ -147,12 +173,12 @@ namespace EversionRipper
                 SpriteBuffer = temp;
             }
 
-            int SpriteCount = SpriteBuffer.Length / (SpriteRegionLength + SpriteSeparatorLength);
+            int SpriteCount = SpriteBuffer.Length / (SpriteRegionLength + SpriteDataHeaderLength);
 
             for (int i = 0; i < SpriteCount; i++)
             {
                 //This is the buffer of the actual sprite we want to rip.
-                var separatoroffset = i * SpriteSeparatorLength + SpriteSeparatorLength;
+                var separatoroffset = i * SpriteDataHeaderLength + SpriteDataHeaderLength;
                 var completeoffset = separatoroffset + i * SpriteRegionLength;
                 byte[] sprite = new byte[SpriteRegionLength];
                 Array.Copy(SpriteBuffer, completeoffset, sprite, 0, SpriteRegionLength);
@@ -189,7 +215,6 @@ namespace EversionRipper
                     OutImage.SetPixel(x, y, WriteThis);
                 }
 
-                uncompressedStream.Close();
                 var graphic = Graphics.FromImage(OutImage);
 
                 //A few tidbits to drop the files in a folder next to where they came from.
@@ -198,60 +223,20 @@ namespace EversionRipper
                 var directory = path.Replace(file, "");
                 if (i == 0 && (File.Exists(directory + filename) || Directory.Exists(directory+filename)))
                 {
-                    DrawWithColor("ERROR: Could not create the directory or file as it already exists.\nPlease remove the file and try again.\n", ConsoleColor.Red);
+                    ShinyTools.Helpers.Console.WriteColor("ERROR: Could not create the directory or file as it already exists.\nPlease remove the file and try again.\n", ConsoleColor.Red);
                     Console.WriteLine("Press any key to quit the application.");
                     Console.ReadKey(true);
-                    DoQuit(QuitResult, 100, 80);
+                    ShinyTools.Helpers.Application.Quit(QuitResult, 100, 80);
                 }
                 else
                 {
                     Directory.CreateDirectory(directory + filename);
-                    OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i}.png", System.Drawing.Imaging.ImageFormat.Png);
+                    OutImage.Save($"{directory+filename}{Path.DirectorySeparatorChar}{filename}_{i.ToString().PadLeft(SpriteCount.ToString().Length, '0')}.png", System.Drawing.Imaging.ImageFormat.Png);
                 }
             }
             QuitResult = "OK!";
-            DoQuit(QuitResult, 1200);
+            ShinyTools.Helpers.Application.Quit(QuitResult, 1200);
 
-        }
-
-        static string DrawWithColor(string text, ConsoleColor textColour)
-        {
-            Console.ForegroundColor = textColour;
-            Console.Write(text);
-            Console.ResetColor();
-            return null;
-        }
-        static string DrawWithColor(string text, ConsoleColor textColour, ConsoleColor backgroundColour)
-        {
-            Console.ForegroundColor = textColour;
-            Console.BackgroundColor = backgroundColour;
-            Console.Write(text);
-            Console.ResetColor();
-            return null;
-        }
-
-        static void DoQuit()
-        {
-            Thread.Sleep(1200);
-            Environment.Exit(0);
-        }
-        static void DoQuit(string result)
-        {
-            Console.WriteLine(result);
-            Thread.Sleep(1200);
-            Environment.Exit(0);
-        }
-        static void DoQuit(string result, int timeout)
-        {
-            Console.WriteLine(result);
-            Thread.Sleep(timeout);
-            Environment.Exit(0);
-        }
-        static void DoQuit(string result, int timeout, int exitCode)
-        {
-            Console.WriteLine(result);
-            Thread.Sleep(timeout);
-            Environment.Exit(exitCode);
         }
     }
 
